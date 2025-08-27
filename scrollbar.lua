@@ -35,7 +35,6 @@ local function isCursorOnElement (x, y, w, h)
 	);
 end
 
-
 -- method's lib's
 function Scrollbar.new (w, h, size, min, max)
 	local self = setmetatable ({ }, Scrollbar);
