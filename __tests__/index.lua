@@ -11,7 +11,7 @@ addEventHandler ('onClientRender', root,
 			local current = math.floor (scroll:get ());
 			dxDrawText (current, x, 480);
 
-			scroll:draw (x, 500, { default = { 255, 0, 0, 255 }, background = { 255, 255, 255, 255 }, effect = { 0, 0, 255, 255 } });
+			scroll:draw (x, 500, { default = tocolor (255, 0, 0, 255), background = tocolor (255, 255, 255, 255), effect = tocolor (0, 0, 255, 255) });
 		end
 
 		return true;
@@ -42,5 +42,7 @@ bindKey ('arrow_u', 'down',
 
 		local value = values[stage];
 		scroll:set (value);
+
+		return true;
 	end
 );

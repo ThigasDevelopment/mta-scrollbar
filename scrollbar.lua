@@ -75,7 +75,7 @@ function Scrollbar:set (value)
 
 	local total = (self.h - self.size);
 	self.offset = ((value - self.min) * total / max);
-	
+
 	return true;
 end
 
@@ -97,8 +97,8 @@ function Scrollbar:draw (x, y, color, postGUI)
 		self.offset = (cursorY < 0 and 0 or cursorY > total and total or cursorY);
 	end
 
-	dxDrawRectangle (x, y, w, h, tocolor (unpack (color.background)), postGUI);
-	dxDrawRectangle (x, y + self.offset, w, self.size, tocolor (unpack ((state and color.effect or color.default))), postGUI);
+	dxDrawRectangle (x, y, w, h, color.background, postGUI);
+	dxDrawRectangle (x, y + self.offset, w, self.size, (state and color.effect or color.default), postGUI);
 	return true;
 end
 
