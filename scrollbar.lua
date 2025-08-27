@@ -53,6 +53,11 @@ function Scrollbar.new (w, h, size, min, max, start)
 		instance.state = true;
 	end
 
+	start = (tonumber (start) or self.min);
+	if (start) then
+		self:set (start);
+	end
+
 	instance.items[self] = true;
 	return self;
 end
@@ -74,7 +79,7 @@ function Scrollbar:set (value)
 	value = math.max (0, math.min (value, max));
 
 	local total = (self.h - self.size);
-	self.offset = ((value - self.min) * total / max);
+	self.offset = math.max (0, math.min (((value - self.min) * total / max), total));
 
 	return true;
 end

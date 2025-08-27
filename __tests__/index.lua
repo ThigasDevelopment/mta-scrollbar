@@ -1,5 +1,5 @@
 local scrolls = {
-	Scrollbar.new (10, 150, 30, 0, 100),
+	Scrollbar.new (10, 150, 30, 75, 100),
 	Scrollbar.new (10, 150, 30, 0, 100),
 }
 
