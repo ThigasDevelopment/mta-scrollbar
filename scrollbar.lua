@@ -4,10 +4,9 @@ Scrollbar.__mode, Scrollbar.__index = 'k', Scrollbar;
 
 -- instance's lib's
 local instance = { };
-instance.current = false;
+instance.items, instance.total = { }, 0;
 
-instance.hover, instance.state = false, false;
-instance.total = 0;
+instance.current, instance.state = false, false;
 
 -- util's lib's
 local screenW, screenH = guiGetScreenSize ();
@@ -38,15 +37,12 @@ end
 
 
 -- method's lib's
-function Scrollbar.new (w, h, min, max, start)
+function Scrollbar.new (w, h, size, min, max, start)
 	local self = setmetatable ({ }, Scrollbar);
 	self.state = false;
 
 	self.w, self.h = (w or 10), (h or 100);
-
-	self.events = {
-		['onValueChanged'] = { },
-	};
+	self.size, self.offset = (size or 30), 0;
 
 	instance.total = (instance.total + 1);
 	if (instance.total > 0) and (not instance.state) then
@@ -55,21 +51,30 @@ function Scrollbar.new (w, h, min, max, start)
 		instance.state = true;
 	end
 
+	instance.items[self] = true;
 	return self;
 end
 
-function Scrollbar:draw (x, y)
+function Scrollbar:draw (x, y, color, postGUI)
 	local w, h = self.w, self.h;
-	instance.hover = false;
+	self.hover = false;
 
 	local inScroll = isCursorOnElement (x, y, w, h);
 	if (inScroll) then
-		instance.hover = self;
+		self.hover = true;
 	end
 
-	dxDrawRectangle (x, y, w, h, tocolor (255, 255, 255, 255), false);
-	dxDrawRectangle (x, y, w, 30, tocolor (255, 0, 0, 255), false);
+	local state = self.state;
+	if (state) then
+		local _, cursorY = getCursorPosition ();
+		cursorY = (cursorY - y);
 
+		local total = (h - self.size);
+		self.offset = (cursorY < 0 and 0 or cursorY > total and total or cursorY);
+	end
+
+	dxDrawRectangle (x, y, w, h, tocolor (unpack (color.background)), postGUI);
+	dxDrawRectangle (x, y + self.offset, w, self.size, tocolor (unpack ((state and color.effect or color.default))), postGUI);
 	return true;
 end
 
@@ -84,6 +89,8 @@ function Scrollbar:toggle (state)
 end
 
 function Scrollbar:destroy ()
+	instance[self] = nil;
+
 	instance.total = math.max (0, (instance.total - 1));
 	if (instance.total < 1) and (instance.state) then
 		removeEventHandler ('onClientClick', root, onClick);
@@ -118,18 +125,21 @@ function onClick (button, state)
 	end
 
 	if (state == 'down') then
-		local self = instance.hover;
-		if (not self) then
-			return false;
-		end
-
 		local current = instance.current;
 		if (current) then
 			return false;
 		end
-		instance.current = self;
 
-		self:toggle (true);
+		local items = instance.items;
+		for item in pairs (items) do
+			if (item.hover) then
+				instance.current = item;
+
+				item:toggle (true);
+				break
+			end
+		end
+
 		return true;
 	end
 
