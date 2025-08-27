@@ -64,6 +64,21 @@ function Scrollbar:get ()
 	return tonumber (('%.1f'):format (percent));
 end
 
+function Scrollbar:set (value)
+	local valueType = type (value);
+	if (valueType ~= 'number') then
+		return false;
+	end
+
+	local max = (self.max - self.min);
+	value = math.max (0, math.min (value, max));
+
+	local total = (self.h - self.size);
+	self.offset = ((value - self.min) * total / max);
+	
+	return true;
+end
+
 function Scrollbar:draw (x, y, color, postGUI)
 	local w, h = self.w, self.h;
 	self.hover = false;

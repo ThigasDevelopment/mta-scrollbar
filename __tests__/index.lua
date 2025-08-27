@@ -17,3 +17,30 @@ addEventHandler ('onClientRender', root,
 		return true;
 	end
 );
+
+local stage = 1;
+bindKey ('arrow_u', 'down',
+	function ()
+		local scroll = scrolls[1];
+		if (not scroll) then
+			return false;
+		end
+
+		local values = {
+			0,
+			20,
+			40,
+			60,
+			80,
+			100,
+		};
+
+		stage = (stage + 1);
+		if (stage > #values) then
+			stage = 1;
+		end
+
+		local value = values[stage];
+		scroll:set (value);
+	end
+);
