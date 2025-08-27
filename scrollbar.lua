@@ -12,14 +12,24 @@ instance.total = 0;
 -- util's lib's
 local screenW, screenH = guiGetScreenSize ();
 
+local _getCursorPosition = getCursorPosition;
+function getCursorPosition ()
+	if (not isCursorShowing ()) then
+		return 0, 0;
+	end
+
+	local cursorX, cursorY = _getCursorPosition ();
+	cursorX, cursorY = (cursorX * screenW), (cursorY * screenH);
+
+	return cursorX, cursorY;
+end
+
 local function isCursorOnElement (x, y, w, h)
 	if (not isCursorShowing ()) then
 		return false;
 	end
 
 	local cursorX, cursorY = getCursorPosition ();
-	cursorX, cursorY = (cursorX * screenW), (cursorY * screenH);
-
 	return (
 		cursorX >= x and cursorX <= (x + w) and
 		cursorY >= y and cursorY <= (y + h)
