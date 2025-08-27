@@ -9,10 +9,30 @@ instance.current = false;
 instance.hover, instance.state = false, false;
 instance.total = 0;
 
+-- util's lib's
+local screenW, screenH = guiGetScreenSize ();
+
+local function isCursorOnElement (x, y, w, h)
+	if (not isCursorShowing ()) then
+		return false;
+	end
+
+	local cursorX, cursorY = getCursorPosition ();
+	cursorX, cursorY = (cursorX * screenW), (cursorY * screenH);
+
+	return (
+		x >= cursorX and (x + w) >= cursorX and
+		y >= cursorY and (y + h) >= cursorY
+	);
+end
+
+
 -- method's lib's
 function Scrollbar.new (w, h, min, max, start)
 	local self = setmetatable ({ }, Scrollbar);
 	self.state = false;
+
+	self.w, self.h = (w or 10), (h or 100);
 
 	self.events = {
 		['onValueChanged'] = { },
@@ -30,8 +50,11 @@ end
 
 function Scrollbar:draw (x, y)
 	local w, h = self.w, self.h;
+	instance.hover = false;
 
 	dxDrawRectangle (x, y, w, h, tocolor (255, 255, 255, 255), false);
+	dxDrawRectangle (x, y, w, 30, tocolor (255, 0, 0, 255), false);
+
 	return true;
 end
 
