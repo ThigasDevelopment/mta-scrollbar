@@ -1,6 +1,5 @@
 local scrolls = {
-	Scrollbar.new (10, 150, 30, 75, 100),
-	Scrollbar.new (10, 150, 30, 0, 100),
+	Scrollbar.new (10, 150, 30, 75, 100, 85),
 }
 
 addEventHandler ('onClientRender', root,
@@ -18,7 +17,7 @@ addEventHandler ('onClientRender', root,
 	end
 );
 
-local stage = 1;
+local stage = 0;
 bindKey ('arrow_u', 'down',
 	function ()
 		local scroll = scrolls[1];
@@ -27,12 +26,7 @@ bindKey ('arrow_u', 'down',
 		end
 
 		local values = {
-			0,
-			20,
-			40,
-			60,
-			80,
-			100,
+			85
 		};
 
 		stage = (stage + 1);

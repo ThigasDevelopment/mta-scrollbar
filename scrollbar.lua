@@ -37,7 +37,7 @@ end
 
 
 -- method's lib's
-function Scrollbar.new (w, h, size, min, max, start)
+function Scrollbar.new (w, h, size, min, max)
 	local self = setmetatable ({ }, Scrollbar);
 	self.state = false;
 
@@ -51,11 +51,6 @@ function Scrollbar.new (w, h, size, min, max, start)
 		addEventHandler ('onClientClick', root, onClick);
 
 		instance.state = true;
-	end
-
-	start = (tonumber (start) or self.min);
-	if (start) then
-		self:set (start);
 	end
 
 	instance.items[self] = true;
