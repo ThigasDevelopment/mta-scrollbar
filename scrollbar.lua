@@ -44,6 +44,8 @@ function Scrollbar.new (w, h, size, min, max, start)
 	self.w, self.h = (w or 10), (h or 100);
 	self.size, self.offset = (size or 30), 0;
 
+	self.min, self.max = (min or 0), (max or 100);
+
 	instance.total = (instance.total + 1);
 	if (instance.total > 0) and (not instance.state) then
 		addEventHandler ('onClientClick', root, onClick);
@@ -53,6 +55,13 @@ function Scrollbar.new (w, h, size, min, max, start)
 
 	instance.items[self] = true;
 	return self;
+end
+
+function Scrollbar:get ()
+	local percent = (self.offset * (self.max - self.min) / (self.h - self.size));
+	percent = (self.min + percent);
+
+	return tonumber (('%.1f'):format (percent));
 end
 
 function Scrollbar:draw (x, y, color, postGUI)
