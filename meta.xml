@@ -3,6 +3,8 @@
 	<info author = 'dracoN*' type = 'script' version = '1.0.0'>
 	<!-- SCRIPT's SRC's -->
 	<script src = 'scrollbar.lua' type = 'client' cache = 'false'/>
+
+	<script src = '__tests__/index.lua' type = 'client' cache = 'false'/>
 	<!-- VERSION's RESOURCE's -->
 	<min_mta_version client = '1.6.0'/>
 </dracon-dev>
