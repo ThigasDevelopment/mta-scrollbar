@@ -28,6 +28,13 @@ function Scrollbar.new (w, h, min, max, start)
 	return self;
 end
 
+function Scrollbar:draw (x, y)
+	local w, h = self.w, self.h;
+
+	dxDrawRectangle (x, y, w, h, tocolor (255, 255, 255, 255), false);
+	return true;
+end
+
 function Scrollbar:toggle (state)
 	local current = self.state;
 	if (current == state) then
