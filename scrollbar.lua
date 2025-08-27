@@ -21,8 +21,8 @@ local function isCursorOnElement (x, y, w, h)
 	cursorX, cursorY = (cursorX * screenW), (cursorY * screenH);
 
 	return (
-		x >= cursorX and (x + w) >= cursorX and
-		y >= cursorY and (y + h) >= cursorY
+		cursorX >= x and cursorX <= (x + w) and
+		cursorY >= y and cursorY <= (y + h)
 	);
 end
 
@@ -51,6 +51,11 @@ end
 function Scrollbar:draw (x, y)
 	local w, h = self.w, self.h;
 	instance.hover = false;
+
+	local inScroll = isCursorOnElement (x, y, w, h);
+	if (inScroll) then
+		instance.hover = self;
+	end
 
 	dxDrawRectangle (x, y, w, h, tocolor (255, 255, 255, 255), false);
 	dxDrawRectangle (x, y, w, 30, tocolor (255, 0, 0, 255), false);
