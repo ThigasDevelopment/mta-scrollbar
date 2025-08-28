@@ -33,18 +33,53 @@ Uma biblioteca moderna e eficiente para criar barras de rolagem customizadas em 
 ### Exemplo Básico
 
 ```lua
-local scroll = Scrollbar.new (10, 150, 30, 75, 100) -- largura, altura, tamanho do scroll, mínimo, máximo
+local scroll = Scrollbar.new (10, 150, 30, 0, 100);
 
 addEventHandler ('onClientRender', root,
-    function ()
-        scroll:draw (500, 500, {
-            effect = tocolor (0, 0, 255, 255),
-            default = tocolor (255, 0, 0, 255),
-            background = tocolor (255, 255, 255, 255),
-        })
-        return true
-    end
-)
+	function ()
+		scroll:draw (500, 500, {
+			effect = tocolor (0, 0, 255, 255),
+			default = tocolor (255, 0, 0, 255),
+			background = tocolor (255, 255, 255, 255),
+		});
+
+		local current = scroll:get ();
+		dxDrawText (current, 470, 500);
+		dxDrawText (math.floor (current), 470, 520);
+
+		return true;
+	end
+);
+```
+
+### Exemplo Avançado
+
+```lua
+local list = { };
+list.items = { 1, 2, 3, 4, 5, 6, 7, 8 };
+list.visible = 3;
+
+local scroll = Scrollbar.new (10, 150, 30, 0, (#list.items - list.visible));
+
+addEventHandler ('onClientRender', root,
+	function ()
+		scroll:draw (520, 500, {
+			effect = tocolor (255, 0, 0, 255),
+			default = tocolor (0, 0, 255, 255),
+			background = tocolor (255, 255, 255, 255),
+		});
+
+		local current = math.floor (scroll:get ());
+		for i = 1, list.visible do
+			local value = list.items[i + current];
+			if (value) then
+				dxDrawText (tostring (value), 540, 500 + ((i - 1) * 20));
+			end
+		end
+
+		return true;
+	end
+);
 ```
 
 ---
