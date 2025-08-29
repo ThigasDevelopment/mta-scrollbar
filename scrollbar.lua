@@ -79,10 +79,10 @@ function Scrollbar:set (value)
 end
 
 function Scrollbar:draw (x, y, color, postGUI)
-	local w, h = self.w, self.h;
+	local w, h, size = self.w, self.h, self.size;
 	self.hover = false;
 
-	local inScroll = isCursorOnElement (x, y, w, h);
+	local inScroll = isCursorOnElement (x, y + self.offset, w, size);
 	if (inScroll) then
 		self.hover = true;
 	end
@@ -90,24 +90,27 @@ function Scrollbar:draw (x, y, color, postGUI)
 	local state = self.state;
 	if (state) then
 		local _, cursorY = getCursorPosition ();
-		cursorY = (cursorY - y);
+		cursorY = (cursorY - (y + (self.lastY - y)));
 
-		local total = (h - self.size);
+		local total = (h - size);
 		self.offset = (cursorY < 0 and 0 or cursorY > total and total or cursorY);
 	end
 
 	dxDrawRectangle (x, y, w, h, color.background, postGUI);
-	dxDrawRectangle (x, y + self.offset, w, self.size, (state and color.effect or color.default), postGUI);
+	dxDrawRectangle (x, y + self.offset, w, size, ((state or inScroll) and color.effect or color.default), postGUI);
 	return true;
 end
 
-function Scrollbar:toggle (state)
+function Scrollbar:toggle (state, lastY)
 	local current = self.state;
 	if (current == state) then
 		return false;
 	end
 
-	self.state = state;
+	self.state, self.lastY = state, lastY;
+	if (not self.state) and (self.lastY) then
+		self.lastY = nil;
+	end
 	return true;
 end
 
@@ -126,7 +129,7 @@ function Scrollbar:destroy ()
 end
 
 -- event's lib's
-function onClick (button, state)
+function onClick (button, state, x, y)
 	local total = instance.total;
 	if (total < 1) then
 		return false;
@@ -158,7 +161,7 @@ function onClick (button, state)
 			if (item.hover) then
 				instance.current = item;
 
-				item:toggle (true);
+				item:toggle (true, (y - item.offset));
 				break
 			end
 		end
