@@ -93,7 +93,7 @@ function Scrollbar:draw (x, y, color, postGUI)
 		cursorY = (cursorY - (y + (self.lastY - y)));
 
 		local total = (h - ratio);
-		self.offset = (cursorY < 0 and 0 or cursorY > total and total or cursorY);
+		self.offset = math.max (0, math.min (cursorY, total));
 	end
 
 	dxDrawRectangle (x, y, w, h, color.background, postGUI);
