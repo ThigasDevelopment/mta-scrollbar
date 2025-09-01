@@ -86,7 +86,7 @@ addEventHandler ('onClientRender', root,
 
 ## ⚡ Principais Métodos
 
-- `Scrollbar.new (w, h, size, min, max)`  
+- `Scrollbar.new (w, h, ratio, min, max)`  
   Cria uma nova barra de rolagem.
 - `scroll:get ()`  
   Retorna o valor atual da barra.
