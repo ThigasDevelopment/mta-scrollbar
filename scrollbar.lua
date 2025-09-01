@@ -36,12 +36,12 @@ local function isCursorOnElement (x, y, w, h)
 end
 
 -- method's lib's
-function Scrollbar.new (w, h, size, min, max)
+function Scrollbar.new (w, h, ratio, min, max)
 	local self = setmetatable ({ }, Scrollbar);
 	self.state = false;
 
 	self.w, self.h = (w or 10), (h or 100);
-	self.size, self.offset = (size or 30), 0;
+	self.ratio, self.offset = (ratio or 30), 0;
 
 	self.min, self.max = (min or 0), (max or 100);
 
@@ -57,7 +57,7 @@ function Scrollbar.new (w, h, size, min, max)
 end
 
 function Scrollbar:get ()
-	local percent = (self.offset * (self.max - self.min) / (self.h - self.size));
+	local percent = (self.offset * (self.max - self.min) / (self.h - self.ratio));
 	percent = (self.min + percent);
 
 	return tonumber (('%.1f'):format (percent));
@@ -72,17 +72,17 @@ function Scrollbar:set (value)
 	local max = (self.max - self.min);
 	value = math.max (0, math.min (value, max));
 
-	local total = (self.h - self.size);
+	local total = (self.h - self.ratio);
 	self.offset = math.max (0, math.min (((value - self.min) * total / max), total));
 
 	return true;
 end
 
 function Scrollbar:draw (x, y, color, postGUI)
-	local w, h, size = self.w, self.h, self.size;
+	local w, h, ratio = self.w, self.h, self.ratio;
 	self.hover = false;
 
-	local inScroll = isCursorOnElement (x, y + self.offset, w, size);
+	local inScroll = isCursorOnElement (x, y + self.offset, w, ratio);
 	if (inScroll) then
 		self.hover = true;
 	end
@@ -92,12 +92,12 @@ function Scrollbar:draw (x, y, color, postGUI)
 		local _, cursorY = getCursorPosition ();
 		cursorY = (cursorY - (y + (self.lastY - y)));
 
-		local total = (h - size);
+		local total = (h - ratio);
 		self.offset = (cursorY < 0 and 0 or cursorY > total and total or cursorY);
 	end
 
 	dxDrawRectangle (x, y, w, h, color.background, postGUI);
-	dxDrawRectangle (x, y + self.offset, w, size, ((state or inScroll) and color.effect or color.default), postGUI);
+	dxDrawRectangle (x, y + self.offset, w, ratio, ((state or inScroll) and color.effect or color.default), postGUI);
 	return true;
 end
 
