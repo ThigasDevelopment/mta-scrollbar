@@ -35,6 +35,50 @@ local function isCursorOnElement (x, y, w, h)
 	);
 end
 
+-- event's lib's
+local function onClick (button, state, x, y)
+	local total = instance.total;
+	if (total < 1) then
+		return false;
+	end
+
+	if (button ~= 'left') then
+		return false;
+	end
+
+	if (state == 'up') then
+		local current = instance.current;
+		if (not current) then
+			return false;
+		end
+		instance.current = false;
+
+		current:toggle (false);
+		return true;
+	end
+
+	if (state == 'down') then
+		local current = instance.current;
+		if (current) then
+			return false;
+		end
+
+		local items = instance.items;
+		for item in pairs (items) do
+			if (item.hover) then
+				instance.current = item;
+
+				item:toggle (true, (y - item.offset));
+				break
+			end
+		end
+
+		return true;
+	end
+
+	return false;
+end
+
 -- method's lib's
 function Scrollbar.new (w, h, ratio, min, max)
 	local self = setmetatable ({ }, Scrollbar);
@@ -126,48 +170,4 @@ function Scrollbar:destroy ()
 
 	collectgarbage ();
 	return true;
-end
-
--- event's lib's
-function onClick (button, state, x, y)
-	local total = instance.total;
-	if (total < 1) then
-		return false;
-	end
-
-	if (button ~= 'left') then
-		return false;
-	end
-
-	if (state == 'up') then
-		local current = instance.current;
-		if (not current) then
-			return false;
-		end
-		instance.current = false;
-
-		current:toggle (false);
-		return true;
-	end
-
-	if (state == 'down') then
-		local current = instance.current;
-		if (current) then
-			return false;
-		end
-
-		local items = instance.items;
-		for item in pairs (items) do
-			if (item.hover) then
-				instance.current = item;
-
-				item:toggle (true, (y - item.offset));
-				break
-			end
-		end
-
-		return true;
-	end
-
-	return false;
 end
